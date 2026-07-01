@@ -427,6 +427,37 @@ function readForm() {
   };
 }
 
+/* ---------- install prompt ---------- */
+
+// Only Chromium-based browsers fire beforeinstallprompt; there's no
+// equivalent API on iOS Safari, so the button simply never appears there.
+function initInstallPrompt() {
+  const btn = document.getElementById("btn-install");
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (isStandalone) return;
+
+  let deferredPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+    btn.hidden = false;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredPrompt = null;
+    btn.hidden = true;
+  });
+
+  btn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    btn.hidden = true;
+  });
+}
+
 /* ---------- init ---------- */
 
 function refresh() {
@@ -444,6 +475,7 @@ function init() {
   let contact = refresh();
 
   initPhotoCrop();
+  initInstallPrompt();
 
   document.getElementById("btn-edit").addEventListener("click", () => openEditForm(contact));
 
