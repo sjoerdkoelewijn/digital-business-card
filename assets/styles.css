@@ -172,7 +172,8 @@
   }
 
   .field-value a { text-decoration: none; }
-  .phone-cc { font-size: 0.72em; font-weight: 400; color: var(--text-on-accent-muted); }
+  .phone-cc { font-size: 0.9em; font-weight: 400; color: var(--text-on-accent-muted); }
+  .phone-number { font-weight: 700; }
   .field-value div + div { margin-top: 0.1rem; }
 
   .btn {

@@ -90,7 +90,10 @@ function renderFieldValue(container, field) {
       const cc = document.createElement("span");
       cc.className = "phone-cc";
       cc.textContent = `(${formatted.countryCode})`;
-      a.append(cc, ` ${formatted.rest}`);
+      const rest = document.createElement("span");
+      rest.className = "phone-number";
+      rest.textContent = formatted.rest;
+      a.append(cc, " ", rest);
     } else {
       a.textContent = value;
     }
