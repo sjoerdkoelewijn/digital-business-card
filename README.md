@@ -27,9 +27,9 @@ Wil je in plaats daarvan vaste standaardwaarden in de code zetten? Pas
 dan `data/contact.js` aan; dat dient als fallback zolang er nog niets
 lokaal is opgeslagen.
 
-**Let op:** de foto wordt alleen toegevoegd aan de gedownloade `.vcf`
-(via "Voeg toe aan contacten"). In de QR-code en op een NFC-tag zit geen
-foto — die hebben te weinig opslagruimte voor een afbeelding.
+Onderaan het bewerkscherm staat ook een link naar **"NFC-tag
+programmeren"** — dat is een eenmalige setup-actie, dus die staat expres
+niet op de kaart zelf.
 
 ## Lokaal bekijken
 
@@ -51,14 +51,15 @@ npx serve .
 ## Gebruik
 
 - **Aan de balie**: open de kaart op je eigen telefoon en toon het
-  scherm, of tik op **"Voeg toe aan contacten"** om een `.vcf` te laten
-  opslaan.
-- **Delen**: laat iemand de QR-code scannen (knop **"Toon QR-code"**) —
-  dat opent direct de "voeg contact toe"-prompt in hun camera-app.
-- **NFC**: via **"NFC-tag programmeren"** kun je eenmalig een fysieke
-  NFC-sticker beschrijven (alleen werkend vanaf Chrome op Android). Wie
-  daarna met een telefoon tegen de tag tikt, krijgt direct de
-  contact-prompt — geen app nodig.
+  scherm.
+- **Delen**: laat iemand de QR-code scannen (icoon rechtsboven op de
+  foto) — dat opent direct de "voeg contact toe"-prompt in hun
+  camera-app. Dit is de enige manier die ook echt werkt voor iemand die
+  jouw gegevens nog niet heeft.
+- **NFC** (eenmalige setup, via "Gegevens bewerken" → "NFC-tag
+  programmeren"): schrijf je gegevens op een fysieke NFC-sticker
+  (alleen werkend vanaf Chrome op Android). Wie daarna met een telefoon
+  tegen de tag tikt, krijgt direct de contact-prompt — geen app nodig.
 
 ## Belangrijk: geen sync tussen toestellen
 

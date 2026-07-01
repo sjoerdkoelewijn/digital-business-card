@@ -46,13 +46,7 @@ function toAbsoluteUrl(value) {
   return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 }
 
-/**
- * @param {object} c contact data
- * @param {{ includePhoto?: boolean }} [options] includePhoto is only safe for
- *   the downloadable .vcf — embedding a photo makes the vCard far too large
- *   to fit in a QR code or an NFC tag, so those callers must omit it.
- */
-export function buildVCard(c, { includePhoto = false } = {}) {
+export function buildVCard(c) {
   const lines = [
     "BEGIN:VCARD",
     "VERSION:3.0",
@@ -82,10 +76,6 @@ export function buildVCard(c, { includePhoto = false } = {}) {
       default:
         break;
     }
-  }
-
-  if (includePhoto && c.photo && c.photo.startsWith("data:image/jpeg;base64,")) {
-    lines.push(`PHOTO;ENCODING=b;TYPE=JPEG:${c.photo.slice("data:image/jpeg;base64,".length)}`);
   }
 
   lines.push("END:VCARD");

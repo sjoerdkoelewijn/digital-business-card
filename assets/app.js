@@ -1,5 +1,5 @@
 import { loadContact, saveContact, isComplete, buildVCard, newFieldId } from "./contact-store.js";
-import { qrIconSvg, vcardGlyphSvg, trashIconSvg, personIconSvg } from "./icons.js";
+import { qrIconSvg, trashIconSvg, personIconSvg } from "./icons.js";
 
 const KIND_LABELS = { text: "Tekst", phone: "Telefoon", email: "E-mail", url: "Link", address: "Adres" };
 const OUTPUT_PHOTO_SIZE = 640;
@@ -131,7 +131,6 @@ function renderCard(c) {
 
   const incomplete = !isComplete(c);
   document.getElementById("incomplete-hint").hidden = !incomplete;
-  document.getElementById("btn-vcf").disabled = incomplete;
   document.getElementById("btn-open-qr").disabled = incomplete;
 }
 
@@ -142,42 +141,6 @@ function renderQr(vcardText) {
   qr.addData(vcardText);
   qr.make();
   target.innerHTML = qr.createSvgTag({ scalable: true });
-}
-
-/* ---------- vcf share / download ---------- */
-
-function vcfFilename(c) {
-  return `${c.firstName}-${c.lastName}`.replace(/\s+/g, "-").toLowerCase() || "contact";
-}
-
-function downloadVcf(vcardText, c) {
-  const blob = new Blob([vcardText], { type: "text/vcard;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${vcfFilename(c)}.vcf`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-// On phones this opens the native share sheet (AirDrop, Nearby Share,
-// WhatsApp, ...) so the card can go straight to whoever is standing next to
-// you, instead of just landing in your own Downloads folder.
-async function shareOrDownloadVcf(vcardText, c) {
-  const file = new File([vcardText], `${vcfFilename(c)}.vcf`, { type: "text/vcard" });
-
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share({ files: [file], title: `${c.firstName} ${c.lastName}`.trim() });
-      return;
-    } catch (error) {
-      if (error.name === "AbortError") return; // user closed the share sheet
-    }
-  }
-
-  downloadVcf(vcardText, c);
 }
 
 /* ---------- photo crop ---------- */
@@ -384,13 +347,12 @@ function refresh() {
   const contact = loadContact();
   renderCard(contact);
   if (isComplete(contact)) {
-    renderQr(buildVCard(contact, { includePhoto: false }));
+    renderQr(buildVCard(contact));
   }
   return contact;
 }
 
 function init() {
-  document.getElementById("icon-vcf-slot").innerHTML = vcardGlyphSvg;
   document.getElementById("btn-open-qr").innerHTML = qrIconSvg;
 
   let contact = refresh();
@@ -413,10 +375,6 @@ function init() {
 
   document.getElementById("btn-add-field").addEventListener("click", () => {
     document.getElementById("field-editor-list").appendChild(createFieldRow({ id: newFieldId(), kind: "text", label: "", value: "" }));
-  });
-
-  document.getElementById("btn-vcf").addEventListener("click", () => {
-    shareOrDownloadVcf(buildVCard(contact, { includePhoto: true }), contact);
   });
 
   document.getElementById("btn-open-qr").addEventListener("click", () => {
