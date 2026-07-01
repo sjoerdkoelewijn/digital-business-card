@@ -122,7 +122,7 @@
   /* ---- content ---- */
 
   .content {
-    padding: 1.5rem 1.5rem 0.5rem;
+    padding: 1.5rem;
   }
 
   .hint {
@@ -211,12 +211,14 @@
     font-size: 0.85rem;
   }
 
-  .btn--full {
+  /* the "Gegevens bewerken" ghost button, sitting on the accent-colored
+     card background — needs its own on-accent colors instead of
+     .btn--ghost's on-surface ones */
+  .btn--ghost-outline {
     width: 100%;
-    border-radius: 0;
-    border: none;
-    border-top: 1px solid var(--border-on-accent);
-    margin-top: 1.25rem;
+    margin-top: 1.5rem;
+    background: transparent;
+    border: 1px solid var(--border-on-accent);
     color: var(--text-on-accent-muted);
   }
 
