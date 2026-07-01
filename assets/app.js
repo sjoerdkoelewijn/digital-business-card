@@ -144,19 +144,40 @@ function renderQr(vcardText) {
   target.innerHTML = qr.createSvgTag({ scalable: true });
 }
 
-/* ---------- vcf download ---------- */
+/* ---------- vcf share / download ---------- */
+
+function vcfFilename(c) {
+  return `${c.firstName}-${c.lastName}`.replace(/\s+/g, "-").toLowerCase() || "contact";
+}
 
 function downloadVcf(vcardText, c) {
   const blob = new Blob([vcardText], { type: "text/vcard;charset=utf-8" });
   const url = URL.createObjectURL(blob);
-  const filename = `${c.firstName}-${c.lastName}`.replace(/\s+/g, "-").toLowerCase() || "contact";
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${filename}.vcf`;
+  a.download = `${vcfFilename(c)}.vcf`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// On phones this opens the native share sheet (AirDrop, Nearby Share,
+// WhatsApp, ...) so the card can go straight to whoever is standing next to
+// you, instead of just landing in your own Downloads folder.
+async function shareOrDownloadVcf(vcardText, c) {
+  const file = new File([vcardText], `${vcfFilename(c)}.vcf`, { type: "text/vcard" });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: `${c.firstName} ${c.lastName}`.trim() });
+      return;
+    } catch (error) {
+      if (error.name === "AbortError") return; // user closed the share sheet
+    }
+  }
+
+  downloadVcf(vcardText, c);
 }
 
 /* ---------- photo crop ---------- */
@@ -395,7 +416,7 @@ function init() {
   });
 
   document.getElementById("btn-vcf").addEventListener("click", () => {
-    downloadVcf(buildVCard(contact, { includePhoto: true }), contact);
+    shareOrDownloadVcf(buildVCard(contact, { includePhoto: true }), contact);
   });
 
   document.getElementById("btn-open-qr").addEventListener("click", () => {
