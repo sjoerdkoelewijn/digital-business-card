@@ -1,5 +1,5 @@
 import { loadContact, saveContact, isComplete, buildVCard, newFieldId } from "./contact-store.js";
-import { qrIconSvg, trashIconSvg, personIconSvg } from "./icons.js";
+import { qrIconSvg, trashIconSvg, personIconSvg, arrowUpIconSvg, arrowDownIconSvg } from "./icons.js";
 
 const KIND_LABELS = { text: "Tekst", phone: "Telefoon", email: "E-mail", url: "Link", address: "Adres" };
 const OUTPUT_PHOTO_SIZE = 640;
@@ -147,7 +147,7 @@ function renderQr(vcardText) {
 
 function resetCropUI() {
   document.getElementById("photo-crop-wrap").hidden = true;
-  document.getElementById("focus-marker").hidden = true;
+  document.getElementById("crop-frame").hidden = true;
   document.getElementById("photo-input").value = "";
 }
 
@@ -156,11 +156,31 @@ function initPhotoCrop() {
   const cropWrap = document.getElementById("photo-crop-wrap");
   const viewport = document.getElementById("photo-crop-viewport");
   const img = document.getElementById("photo-crop-img");
-  const marker = document.getElementById("focus-marker");
+  const frame = document.getElementById("crop-frame");
   const preview = document.getElementById("photo-preview");
   const removeBtn = document.getElementById("btn-remove-photo");
 
   let focus = { x: 0.5, y: 0.5 };
+
+  // Draws the square that will actually be kept, so it's obvious up front
+  // that the photo becomes a 1:1 crop instead of just picking a focus dot.
+  function updateCropFrame() {
+    const naturalW = img.naturalWidth;
+    const naturalH = img.naturalHeight;
+    if (!naturalW || !naturalH) return;
+
+    const displayW = viewport.clientWidth;
+    const displayH = displayW * (naturalH / naturalW);
+    const side = Math.min(displayW, displayH);
+    const left = Math.min(Math.max(focus.x * displayW - side / 2, 0), displayW - side);
+    const top = Math.min(Math.max(focus.y * displayH - side / 2, 0), displayH - side);
+
+    frame.style.width = `${side}px`;
+    frame.style.height = `${side}px`;
+    frame.style.left = `${left}px`;
+    frame.style.top = `${top}px`;
+    frame.hidden = false;
+  }
 
   document.getElementById("btn-choose-photo").addEventListener("click", () => input.click());
 
@@ -171,23 +191,20 @@ function initPhotoCrop() {
     reader.onload = () => {
       img.src = reader.result;
       cropWrap.hidden = false;
-      marker.hidden = true;
       focus = { x: 0.5, y: 0.5 };
+      img.onload = () => updateCropFrame();
     };
     reader.readAsDataURL(file);
   });
 
-  function setFocusFromEvent(event) {
+  viewport.addEventListener("click", (event) => {
     const rect = viewport.getBoundingClientRect();
-    const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
-    const y = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
-    focus = { x, y };
-    marker.hidden = false;
-    marker.style.left = `${x * 100}%`;
-    marker.style.top = `${y * 100}%`;
-  }
-
-  viewport.addEventListener("click", setFocusFromEvent);
+    focus = {
+      x: Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)),
+      y: Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height)),
+    };
+    updateCropFrame();
+  });
 
   document.getElementById("btn-cancel-photo").addEventListener("click", () => {
     resetCropUI();
@@ -241,14 +258,39 @@ function createFieldRow(field) {
     select.appendChild(option);
   }
 
+  const moveUpBtn = document.createElement("button");
+  moveUpBtn.type = "button";
+  moveUpBtn.className = "field-move-btn";
+  moveUpBtn.setAttribute("aria-label", "Naar boven verplaatsen");
+  moveUpBtn.innerHTML = arrowUpIconSvg;
+  moveUpBtn.addEventListener("click", () => {
+    const prev = li.previousElementSibling;
+    if (prev) li.parentElement.insertBefore(li, prev);
+    updateFieldMoveButtons();
+  });
+
+  const moveDownBtn = document.createElement("button");
+  moveDownBtn.type = "button";
+  moveDownBtn.className = "field-move-btn";
+  moveDownBtn.setAttribute("aria-label", "Naar beneden verplaatsen");
+  moveDownBtn.innerHTML = arrowDownIconSvg;
+  moveDownBtn.addEventListener("click", () => {
+    const next = li.nextElementSibling;
+    if (next) li.parentElement.insertBefore(next, li);
+    updateFieldMoveButtons();
+  });
+
   const deleteBtn = document.createElement("button");
   deleteBtn.type = "button";
   deleteBtn.className = "field-delete-btn";
   deleteBtn.setAttribute("aria-label", "Veld verwijderen");
   deleteBtn.innerHTML = trashIconSvg;
-  deleteBtn.addEventListener("click", () => li.remove());
+  deleteBtn.addEventListener("click", () => {
+    li.remove();
+    updateFieldMoveButtons();
+  });
 
-  top.append(select, deleteBtn);
+  top.append(select, moveUpBtn, moveDownBtn, deleteBtn);
 
   const labelInput = document.createElement("input");
   labelInput.type = "text";
@@ -281,12 +323,21 @@ function createFieldRow(field) {
   return li;
 }
 
+function updateFieldMoveButtons() {
+  const rows = document.querySelectorAll("#field-editor-list .field-editor-row");
+  rows.forEach((row, index) => {
+    row.querySelector(".field-move-btn[aria-label='Naar boven verplaatsen']").disabled = index === 0;
+    row.querySelector(".field-move-btn[aria-label='Naar beneden verplaatsen']").disabled = index === rows.length - 1;
+  });
+}
+
 function populateFieldEditor(fields) {
   const list = document.getElementById("field-editor-list");
   list.replaceChildren();
   for (const field of fields) {
     list.appendChild(createFieldRow(field));
   }
+  updateFieldMoveButtons();
 }
 
 function readFieldsFromEditor() {
@@ -363,8 +414,14 @@ function init() {
 
   document.getElementById("edit-form").addEventListener("submit", (event) => {
     event.preventDefault();
-    contact = readForm();
-    saveContact(contact);
+    const next = readForm();
+    try {
+      saveContact(next);
+    } catch (error) {
+      alert("Opslaan is mislukt: " + (error && error.message ? error.message : error));
+      return;
+    }
+    contact = next;
     document.getElementById("edit-dialog").close();
     refresh();
   });
@@ -375,6 +432,7 @@ function init() {
 
   document.getElementById("btn-add-field").addEventListener("click", () => {
     document.getElementById("field-editor-list").appendChild(createFieldRow({ id: newFieldId(), kind: "text", label: "", value: "" }));
+    updateFieldMoveButtons();
   });
 
   document.getElementById("btn-open-qr").addEventListener("click", () => {

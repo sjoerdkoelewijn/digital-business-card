@@ -41,7 +41,7 @@
   </main>
 
   <dialog id="qr-dialog" class="dialog dialog--qr">
-    <h2>Scan om contact toe te voegen</h2>
+    <h2>Scannez pour ajouter le contact</h2>
     <div id="qr-code" class="qr-code"></div>
     <button id="btn-close-qr" class="btn btn--secondary" type="button">Sluiten</button>
   </dialog>
@@ -61,10 +61,10 @@
           <input type="file" id="photo-input" accept="image/*" hidden />
 
           <div id="photo-crop-wrap" class="photo-crop-wrap" hidden>
-            <p class="hint">Tik op de foto om het focuspunt te kiezen.</p>
+            <p class="hint">Tik op de foto om te bepalen welk deel vierkant wordt bijgesneden.</p>
             <div id="photo-crop-viewport" class="photo-crop-viewport">
               <img id="photo-crop-img" alt="" />
-              <div id="focus-marker" class="focus-marker" hidden></div>
+              <div id="crop-frame" class="crop-frame" hidden></div>
             </div>
             <div class="row">
               <button type="button" id="btn-use-photo" class="btn btn--primary">Foto gebruiken</button>
