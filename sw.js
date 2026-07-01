@@ -1,4 +1,4 @@
-const CACHE_NAME = "visitekaartje-v10";
+const CACHE_NAME = "visitekaartje-v11";
 
 const ASSETS = [
   "./",
@@ -35,16 +35,20 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  // Stale-while-revalidate: answer instantly from cache (important on a
+  // slow connection at a reception desk), but always refetch in the
+  // background so the *next* load already has whatever changed — instead
+  // of being stuck on one cached version until someone clears site data.
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).then((response) => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-        }
-        return response;
-      });
+    caches.open(CACHE_NAME).then(async (cache) => {
+      const cached = await cache.match(event.request);
+      const network = fetch(event.request)
+        .then((response) => {
+          if (response.ok) cache.put(event.request, response.clone());
+          return response;
+        })
+        .catch(() => null);
+      return cached || (await network) || Response.error();
     }),
   );
 });
