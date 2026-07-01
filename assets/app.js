@@ -143,7 +143,11 @@ function renderCard(c) {
   const list = document.getElementById("card-fields");
   list.replaceChildren();
   for (const field of c.fields || []) {
-    if (!field.label && !field.value) continue;
+    const hasValue = Boolean((field.value || "").trim());
+    // Phone is treated as compulsory (like the name) so it always shows,
+    // even with a "—" placeholder — every other empty field is hidden
+    // instead of cluttering the card with unfilled rows.
+    if (field.kind !== "phone" && !hasValue) continue;
     const li = document.createElement("li");
     li.className = "field";
 

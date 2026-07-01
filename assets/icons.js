@@ -31,6 +31,6 @@ export const arrowDownIconSvg = `
 
 export const personIconSvg = `
 <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="40" cy="26" r="16" fill="currentColor" opacity="0.35"/>
-  <path d="M8 80c0-30 14.3-34 32-34s32 4 32 34Z" fill="currentColor" opacity="0.35"/>
+  <circle cx="40" cy="30" r="14" fill="currentColor" opacity="0.35"/>
+  <path d="M14 68c2-16 13-26 26-26s24 10 26 26" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity="0.35" fill="none"/>
 </svg>`;
