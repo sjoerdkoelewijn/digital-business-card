@@ -101,9 +101,9 @@
     right: 0;
     bottom: -1px;
     width: 100%;
-    aspect-ratio: 361 / 92;
+    aspect-ratio: 360 / 91;
     height: auto;
-    color: var(--surface);
+    color: var(--accent);
   }
 
   .icon-tile-btn {
