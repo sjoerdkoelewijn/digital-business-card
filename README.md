@@ -17,7 +17,12 @@ Tik onderaan de kaart op **"Gegevens bewerken"** om alles aan te passen:
   Email, Telefoon, Adres, Website, LinkedIn, ...). Je kiest per veld het
   type (tekst, telefoon, e-mail, link of adres) — dat bepaalt of het als
   tel:/mailto:/link wordt weergegeven én of het wordt meegenomen in de
-  vCard. Velden zijn vrij toe te voegen, te hernoemen of te verwijderen.
+  vCard. Velden zijn vrij toe te voegen, te hernoemen, te herordenen (via
+  de pijltjes) of te verwijderen.
+  - **Telefoon-velden**: vul in als landcode + nummer zonder spaties,
+    bv. `0031611223344`. Dat is ook precies wat er in de vCard komt te
+    staan; op de kaart zelf wordt het automatisch getoond als
+    `(0031) 06 11 22 33 44`.
 
 Alles wordt lokaal opgeslagen op je telefoon (`localStorage`) — geen
 account, geen login nodig. Bij een lege kaart opent het bewerkscherm

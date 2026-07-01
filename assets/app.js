@@ -2,6 +2,13 @@ import { loadContact, saveContact, isComplete, buildVCard, newFieldId } from "./
 import { qrIconSvg, trashIconSvg, personIconSvg, arrowUpIconSvg, arrowDownIconSvg } from "./icons.js";
 
 const KIND_LABELS = { text: "Tekst", phone: "Telefoon", email: "E-mail", url: "Link", address: "Adres" };
+const VALUE_PLACEHOLDERS = {
+  phone: "0031611223344 (landcode + nummer, geen spaties)",
+  email: "naam@voorbeeld.com",
+  url: "voorbeeld.com",
+  text: "Waarde",
+  address: "Straatnaam 12\n1234 AB Plaats",
+};
 const OUTPUT_PHOTO_SIZE = 640;
 
 let pendingPhoto = null; // dataURL staged in the editor, applied on save
@@ -42,6 +49,19 @@ function applyAccentColor(color) {
 
 /* ---------- card rendering ---------- */
 
+// The stored value is the vCard-friendly form (e.g. "0031611223344" — a
+// "00" dialing prefix plus the national number with its leading 0 dropped).
+// For display we turn that back into "(0031) 06 11 22 33 44". Anything that
+// doesn't match that shape (no "00" prefix, too short) is shown as typed.
+function formatPhoneDisplay(raw) {
+  const digits = (raw || "").replace(/\D/g, "");
+  if (!digits.startsWith("00") || digits.length < 6) return null;
+  const countryCode = digits.slice(0, 4);
+  const national = "0" + digits.slice(4);
+  const rest = national.match(/\d{1,2}/g).join(" ");
+  return { countryCode, rest };
+}
+
 function renderFieldValue(container, field) {
   container.replaceChildren();
   const value = field.value || "";
@@ -65,7 +85,15 @@ function renderFieldValue(container, field) {
   if (field.kind === "phone") {
     const a = document.createElement("a");
     a.href = `tel:${value.replace(/\s+/g, "")}`;
-    a.textContent = value;
+    const formatted = formatPhoneDisplay(value);
+    if (formatted) {
+      const cc = document.createElement("span");
+      cc.className = "phone-cc";
+      cc.textContent = `(${formatted.countryCode})`;
+      a.append(cc, ` ${formatted.rest}`);
+    } else {
+      a.textContent = value;
+    }
     container.appendChild(a);
   } else if (field.kind === "email") {
     const a = document.createElement("a");
@@ -305,7 +333,7 @@ function createFieldRow(field) {
     valueControl.type = "text";
   }
   valueControl.className = "f-value";
-  valueControl.placeholder = "Waarde";
+  valueControl.placeholder = VALUE_PLACEHOLDERS[field.kind] || "Waarde";
   valueControl.value = field.value || "";
 
   select.addEventListener("change", () => {
@@ -314,7 +342,7 @@ function createFieldRow(field) {
     if (newControl.tagName === "TEXTAREA") newControl.rows = 2;
     else newControl.type = "text";
     newControl.className = "f-value";
-    newControl.placeholder = "Waarde";
+    newControl.placeholder = VALUE_PLACEHOLDERS[select.value] || "Waarde";
     newControl.value = current.value;
     current.replaceWith(newControl);
   });
