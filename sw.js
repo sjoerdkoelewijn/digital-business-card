@@ -1,4 +1,4 @@
-const CACHE_NAME = "visitekaartje-v7";
+const CACHE_NAME = "visitekaartje-v8";
 
 const ASSETS = [
   "./",
