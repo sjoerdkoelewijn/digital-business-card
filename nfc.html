@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>NFC-tag programmeren</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+  <style>
+    .nfc-main {
+      max-width: 30rem;
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      text-align: center;
+    }
+    .nfc-status { font-size: 1.1rem; min-height: 1.5rem; }
+    .nfc-status--error { color: var(--danger); }
+    .back-link { font-size: 0.9rem; color: var(--text-muted); text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <main class="nfc-main">
+    <h1>NFC-tag programmeren</h1>
+    <p>
+      Schrijf je contactgegevens eenmalig op een fysieke NFC-tag (bv. een
+      NTAG213-sticker). Daarna hoeft niemand deze app te openen: een tik met
+      een telefoon tegen de tag toont direct een "voeg contact toe"-prompt,
+      op zowel Android als iPhone.
+    </p>
+    <p id="nfc-status" class="nfc-status">Klaar om te schrijven.</p>
+    <button id="btn-write" class="btn btn--primary" type="button">Tag schrijven</button>
+    <a class="back-link" href="./index.html">← Terug naar kaart</a>
+  </main>
+
+  <script type="module" src="./assets/nfc.js"></script>
+</body>
+</html>

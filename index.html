@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Visitekaartje</title>
+  <meta name="description" content="Digitaal visitekaartje" />
+
+  <meta name="theme-color" content="#ffffff" />
+
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Visitekaartje" />
+
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <main class="card">
+    <section class="photo">
+      <img id="card-photo" class="photo-img" alt="" hidden />
+      <div id="photo-placeholder" class="photo-placeholder"></div>
+      <svg class="photo-wave" viewBox="0 0 361 92" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M171.34 32.9365C113.059 51.808 38 49.9563 0.5 32.9365V90.9563H360.5V11.4644C308 -15.5437 231.5 13.4562 171.34 32.9365Z" fill="var(--surface)"/>
+      </svg>
+      <button id="btn-open-qr" class="icon-tile-btn" type="button" aria-label="Toon QR-code"></button>
+    </section>
+
+    <div class="content">
+      <p id="incomplete-hint" class="hint" hidden>Vul je gegevens in via "Gegevens bewerken" hieronder.</p>
+
+      <h1 id="card-name" class="name">—</h1>
+      <p id="card-phonetic" class="phonetic" hidden></p>
+
+      <ul id="card-fields" class="fields"></ul>
+
+      <button id="btn-vcf" class="btn btn--primary btn--invert btn--icon" type="button">
+        <span id="icon-vcf-slot" class="btn-icon" aria-hidden="true"></span>
+        Voeg toe aan contacten
+      </button>
+
+      <a class="nfc-link" href="./nfc.html">NFC-tag programmeren →</a>
+    </div>
+
+    <button id="btn-edit" class="btn btn--ghost btn--full" type="button">Gegevens bewerken</button>
+  </main>
+
+  <dialog id="qr-dialog" class="dialog dialog--qr">
+    <h2>Scan om contact toe te voegen</h2>
+    <div id="qr-code" class="qr-code"></div>
+    <button id="btn-close-qr" class="btn btn--secondary" type="button">Sluiten</button>
+  </dialog>
+
+  <dialog id="edit-dialog" class="dialog dialog--full">
+    <form id="edit-form" method="dialog" class="edit-form">
+      <header class="edit-header">
+        <h2>Gegevens bewerken</h2>
+        <button type="button" id="btn-cancel-edit" class="icon-btn" aria-label="Sluiten">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </header>
+
+      <div class="edit-body">
+        <section class="edit-section">
+          <h3>Foto</h3>
+          <input type="file" id="photo-input" accept="image/*" hidden />
+
+          <div id="photo-crop-wrap" class="photo-crop-wrap" hidden>
+            <p class="hint">Tik op de foto om het focuspunt te kiezen.</p>
+            <div id="photo-crop-viewport" class="photo-crop-viewport">
+              <img id="photo-crop-img" alt="" />
+              <div id="focus-marker" class="focus-marker" hidden></div>
+            </div>
+            <div class="row">
+              <button type="button" id="btn-use-photo" class="btn btn--primary">Foto gebruiken</button>
+              <button type="button" id="btn-cancel-photo" class="btn btn--ghost">Annuleren</button>
+            </div>
+          </div>
+
+          <div id="photo-preview-wrap" class="photo-preview-wrap">
+            <img id="photo-preview" class="photo-preview" alt="" hidden />
+            <div class="row">
+              <button type="button" id="btn-choose-photo" class="btn btn--secondary">Foto kiezen</button>
+              <button type="button" id="btn-remove-photo" class="btn btn--ghost" hidden>Verwijderen</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="edit-section">
+          <h3>Naam</h3>
+          <label>Voornaam
+            <input type="text" name="firstName" required />
+          </label>
+          <label>Achternaam
+            <input type="text" name="lastName" required />
+          </label>
+          <label>Uitspraak <span class="optional">(optioneel)</span>
+            <input type="text" name="phonetic" placeholder="[ Chourde Kou-lee-weïne ]" />
+          </label>
+        </section>
+
+        <section class="edit-section">
+          <h3>Kleur</h3>
+          <label class="color-row">Achtergrondkleur
+            <input type="color" name="accentColor" />
+          </label>
+        </section>
+
+        <section class="edit-section">
+          <div class="edit-section-header">
+            <h3>Velden</h3>
+            <button type="button" id="btn-add-field" class="btn btn--ghost btn--small">+ Veld toevoegen</button>
+          </div>
+          <ul id="field-editor-list" class="field-editor-list"></ul>
+        </section>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="submit" class="btn btn--primary">Opslaan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="./assets/qrcode.min.js"></script>
+  <script type="module" src="./assets/app.js"></script>
+</body>
+</html>
