@@ -10,6 +10,11 @@ const VALUE_PLACEHOLDERS = {
   address: "Straatnaam 12\n1234 AB Plaats",
 };
 const OUTPUT_PHOTO_SIZE = 640;
+const PRESET_COLORS = [
+  "#033d74", "#0f172a", "#1e3a2b", "#0e4f4f",
+  "#3b1f6e", "#7a2048", "#8a2b0e", "#5c4b1a",
+  "#b91c1c", "#0369a1", "#047857", "#c2410c",
+];
 
 let pendingPhoto = null; // dataURL staged in the editor, applied on save
 
@@ -414,13 +419,26 @@ function readFieldsFromEditor() {
 
 /* ---------- edit form ---------- */
 
+// Reflects the current editor color into the hex field, the live preview
+// box and the pressed-state of the swatches. Called both when opening the
+// form and on every swatch/hex change so the three stay in sync.
+function setEditorColor(hex) {
+  const form = document.getElementById("edit-form");
+  const normalized = normalizeHex(hex);
+  form.accentColorHex.value = hex;
+  if (!normalized) return;
+  document.getElementById("color-preview").style.background = normalized;
+  document.querySelectorAll(".color-swatch").forEach((sw) => {
+    sw.setAttribute("aria-pressed", sw.dataset.color === normalized ? "true" : "false");
+  });
+}
+
 function openEditForm(c) {
   const form = document.getElementById("edit-form");
   form.firstName.value = c.firstName;
   form.lastName.value = c.lastName;
   form.phonetic.value = c.phonetic || "";
-  form.accentColor.value = c.accentColor || "#033d74";
-  form.accentColorHex.value = c.accentColor || "#033d74";
+  setEditorColor(c.accentColor || "#033d74");
 
   pendingPhoto = c.photo || null;
   const preview = document.getElementById("photo-preview");
@@ -447,7 +465,7 @@ function readForm() {
     firstName: form.firstName.value.trim(),
     lastName: form.lastName.value.trim(),
     phonetic: form.phonetic.value.trim(),
-    accentColor: normalizeHex(form.accentColorHex.value) || form.accentColor.value,
+    accentColor: normalizeHex(form.accentColorHex.value) || "#033d74",
     fields: readFieldsFromEditor(),
   };
 }
@@ -522,17 +540,24 @@ function init() {
     document.getElementById("edit-dialog").close();
   });
 
-  // Keep the native color swatch and the hex text field in sync — some
-  // Android devices render the native picker's hue/saturation sliders
-  // solid black (a known OS bug), so typing a hex value directly needs to
-  // work fully on its own.
-  const editForm = document.getElementById("edit-form");
-  editForm.accentColor.addEventListener("input", () => {
-    editForm.accentColorHex.value = editForm.accentColor.value;
-  });
-  editForm.accentColorHex.addEventListener("input", () => {
-    const normalized = normalizeHex(editForm.accentColorHex.value);
-    if (normalized) editForm.accentColor.value = normalized;
+  // Build the preset swatch grid. The native <input type="color"> picker is
+  // broken on some Android devices (hue/saturation render solid black), so
+  // the color UI is swatches + a plain hex field — both fully reliable.
+  const swatchList = document.getElementById("color-swatches");
+  for (const color of PRESET_COLORS) {
+    const sw = document.createElement("button");
+    sw.type = "button";
+    sw.className = "color-swatch";
+    sw.dataset.color = color;
+    sw.style.background = color;
+    sw.setAttribute("aria-label", `Kleur ${color}`);
+    sw.setAttribute("aria-pressed", "false");
+    sw.addEventListener("click", () => setEditorColor(color));
+    swatchList.appendChild(sw);
+  }
+
+  document.getElementById("edit-form").accentColorHex.addEventListener("input", (event) => {
+    setEditorColor(event.target.value);
   });
 
   document.getElementById("btn-add-field").addEventListener("click", () => {

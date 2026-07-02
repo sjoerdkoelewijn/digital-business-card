@@ -79,6 +79,8 @@
   @media (min-width: 520px) {
     body {
       background: var(--page-bg);
+      align-items: center;
+      padding: 1.5rem 0;
     }
 
     .card {
@@ -242,10 +244,18 @@
      .btn--ghost's on-surface ones */
   .btn--ghost-outline {
     width: 100%;
-    margin-top: 1.5rem;
     background: transparent;
     border: 1px solid var(--border-on-accent);
     color: var(--text-on-accent-muted);
+  }
+
+  /* Pushed well below the content so the card reads as "done" at the fold;
+     the edit/install buttons are a deliberate scroll away. */
+  .card-actions {
+    margin-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
   .btn:disabled {
@@ -380,35 +390,47 @@
   }
   .edit-form textarea { resize: vertical; }
 
-  .color-row {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .edit-form input[type="color"] {
-    width: 2.75rem;
-    height: 2.5rem;
-    flex: none;
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    padding: 0.15rem;
-    background: var(--surface);
+  .color-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(2.5rem, 1fr));
+    gap: 0.6rem;
   }
 
-  .color-inputs {
+  .color-swatch {
+    aspect-ratio: 1 / 1;
+    border-radius: 0.6rem;
+    border: 1px solid rgb(15 23 42 / 0.12);
+    cursor: pointer;
+    padding: 0;
+  }
+  .color-swatch[aria-pressed="true"] {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  .color-hex-row {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .color-preview {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
   }
 
   .color-hex-input {
-    width: 7rem;
-    min-height: 2.5rem;
-    padding: 0.4rem 0.6rem;
+    flex: 1;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.75rem;
     border-radius: 0.5rem;
     border: 1px solid var(--border);
     background: var(--bg);
     color: var(--text);
-    font-size: 0.95rem;
+    font-size: 1rem;
     text-transform: lowercase;
   }
 

@@ -36,8 +36,10 @@
 
       <ul id="card-fields" class="fields"></ul>
 
-      <button id="btn-edit" class="btn btn--ghost-outline" type="button">Gegevens bewerken</button>
-      <button id="btn-install" class="btn btn--ghost-outline" type="button" hidden>App installeren</button>
+      <div class="card-actions">
+        <button id="btn-edit" class="btn btn--ghost-outline" type="button">Gegevens bewerken</button>
+        <button id="btn-install" class="btn btn--ghost-outline" type="button" hidden>App installeren</button>
+      </div>
     </div>
   </main>
 
@@ -96,13 +98,12 @@
         </section>
 
         <section class="edit-section">
-          <h3>Kleur</h3>
-          <label class="color-row">Achtergrondkleur
-            <span class="color-inputs">
-              <input type="color" name="accentColor" />
-              <input type="text" name="accentColorHex" class="color-hex-input" placeholder="#033d74" maxlength="7" autocapitalize="off" autocorrect="off" spellcheck="false" />
-            </span>
-          </label>
+          <h3>Achtergrondkleur</h3>
+          <div id="color-swatches" class="color-swatches"></div>
+          <div class="color-hex-row">
+            <span id="color-preview" class="color-preview" aria-hidden="true"></span>
+            <input type="text" name="accentColorHex" class="color-hex-input" placeholder="#033d74" maxlength="7" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" />
+          </div>
         </section>
 
         <section class="edit-section">
