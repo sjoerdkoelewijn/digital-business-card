@@ -15,6 +15,18 @@ let pendingPhoto = null; // dataURL staged in the editor, applied on save
 
 /* ---------- theming ---------- */
 
+// Accepts "033d74", "#033d74" or "#03D" and returns a clean "#033d74", or
+// null while the user is still mid-typing an incomplete value.
+function normalizeHex(value) {
+  let v = (value || "").trim();
+  if (!v) return null;
+  if (!v.startsWith("#")) v = `#${v}`;
+  if (/^#[0-9a-f]{3}$/i.test(v)) {
+    v = `#${v[1]}${v[1]}${v[2]}${v[2]}${v[3]}${v[3]}`;
+  }
+  return /^#[0-9a-f]{6}$/i.test(v) ? v.toLowerCase() : null;
+}
+
 // Perceived brightness (YIQ) of a #rrggbb color, 0 (black) - 255 (white).
 function getBrightness(hex) {
   const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "");
@@ -396,6 +408,7 @@ function openEditForm(c) {
   form.lastName.value = c.lastName;
   form.phonetic.value = c.phonetic || "";
   form.accentColor.value = c.accentColor || "#033d74";
+  form.accentColorHex.value = c.accentColor || "#033d74";
 
   pendingPhoto = c.photo || null;
   const preview = document.getElementById("photo-preview");
@@ -422,7 +435,7 @@ function readForm() {
     firstName: form.firstName.value.trim(),
     lastName: form.lastName.value.trim(),
     phonetic: form.phonetic.value.trim(),
-    accentColor: form.accentColor.value,
+    accentColor: normalizeHex(form.accentColorHex.value) || form.accentColor.value,
     fields: readFieldsFromEditor(),
   };
 }
@@ -495,6 +508,19 @@ function init() {
 
   document.getElementById("btn-cancel-edit").addEventListener("click", () => {
     document.getElementById("edit-dialog").close();
+  });
+
+  // Keep the native color swatch and the hex text field in sync — some
+  // Android devices render the native picker's hue/saturation sliders
+  // solid black (a known OS bug), so typing a hex value directly needs to
+  // work fully on its own.
+  const editForm = document.getElementById("edit-form");
+  editForm.accentColor.addEventListener("input", () => {
+    editForm.accentColorHex.value = editForm.accentColor.value;
+  });
+  editForm.accentColorHex.addEventListener("input", () => {
+    const normalized = normalizeHex(editForm.accentColorHex.value);
+    if (normalized) editForm.accentColor.value = normalized;
   });
 
   document.getElementById("btn-add-field").addEventListener("click", () => {

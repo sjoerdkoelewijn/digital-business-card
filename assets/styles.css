@@ -366,12 +366,30 @@
     justify-content: space-between;
   }
   .edit-form input[type="color"] {
-    width: 3.5rem;
+    width: 2.75rem;
     height: 2.5rem;
+    flex: none;
     border: 1px solid var(--border);
     border-radius: 0.5rem;
     padding: 0.15rem;
     background: var(--surface);
+  }
+
+  .color-inputs {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .color-hex-input {
+    width: 7rem;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.95rem;
+    text-transform: lowercase;
   }
 
   .row {
