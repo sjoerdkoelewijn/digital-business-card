@@ -43,6 +43,9 @@
     --border-on-accent: rgb(255 255 255 / 0.15);
     /* accent color as used for text/icons drawn on a white surface */
     --accent-on-surface: var(--accent);
+    /* lighter tint of the accent color, used as the page background behind
+       the card on screens wide enough to show it as a floating "window" */
+    --page-bg: var(--accent);
   }
 }
 
@@ -61,10 +64,25 @@
     width: 100%;
     max-width: 480px;
     background: var(--accent);
-    border-radius: 1.75rem;
+    border-radius: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+  }
+
+  /* Below this, the card is edge-to-edge and rounded corners just look like
+     a rendering glitch against the physical screen edge. From here up,
+     there's visible page background around the card, so it reads as a
+     window again — bring back the rounding and a lighter page tint. */
+  @media (min-width: 450px) {
+    body {
+      background: var(--page-bg);
+    }
+
+    .card {
+      border-radius: 1.75rem;
+      box-shadow: 0 20px 45px -25px rgb(15 23 42 / 0.35);
+    }
   }
 
   /* ---- photo ---- */

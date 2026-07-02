@@ -35,6 +35,17 @@ function getBrightness(hex) {
   return (r * 299 + g * 587 + b * 114) / 1000;
 }
 
+// Mixes a #rrggbb color toward white by `amount` (0-1) — used for the page
+// background behind the card on wider screens, so the card reads as a
+// window sitting on a slightly lighter page instead of blending into it.
+function lighten(hex, amount) {
+  const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "");
+  if (!match) return hex;
+  const [r, g, b] = match.slice(1).map((h) => parseInt(h, 16));
+  const mix = (channel) => Math.round(channel + (255 - channel) * amount);
+  return `#${[mix(r), mix(g), mix(b)].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+}
+
 // The card background color is user-chosen and can end up light, so the
 // fixed "white text on accent" theme flips to dark text when needed instead
 // of letting text disappear.
@@ -42,6 +53,7 @@ function applyAccentColor(color) {
   if (!color) return;
   const root = document.documentElement.style;
   root.setProperty("--accent", color);
+  root.setProperty("--page-bg", lighten(color, 0.14));
 
   const isLight = getBrightness(color) > 150;
   if (isLight) {
