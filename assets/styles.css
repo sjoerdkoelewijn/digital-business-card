@@ -71,10 +71,12 @@
   }
 
   /* Below this, the card is edge-to-edge and rounded corners just look like
-     a rendering glitch against the physical screen edge. From here up,
-     there's visible page background around the card, so it reads as a
-     window again — bring back the rounding and a lighter page tint. */
-  @media (min-width: 450px) {
+     a rendering glitch against the physical screen edge. This has to be
+     wider than the card's own max-width (480px) — otherwise there's a gap
+     where the viewport is wide enough to trigger rounding but not wide
+     enough to actually show any page background around the card, which
+     brings back the exact same glitch this is meant to avoid. */
+  @media (min-width: 520px) {
     body {
       background: var(--page-bg);
     }
