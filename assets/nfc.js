@@ -11,12 +11,12 @@ function setStatus(text, isError = false) {
 async function writeTag() {
   const contact = loadContact();
   if (!isComplete(contact)) {
-    setStatus("Vul eerst je gegevens in op de kaart voordat je een tag schrijft.", true);
+    setStatus("Fill in your details on the card first before writing a tag.", true);
     return;
   }
 
   if (location.protocol !== "https:" && location.hostname !== "localhost") {
-    setStatus("Web NFC vereist een HTTPS-verbinding.", true);
+    setStatus("Web NFC requires an HTTPS connection.", true);
     return;
   }
 
@@ -24,23 +24,23 @@ async function writeTag() {
   const encoder = new TextEncoder();
 
   try {
-    setStatus("Houd de tag tegen de achterkant van je telefoon…");
+    setStatus("Hold the tag against the back of your phone…");
     const ndef = new NDEFReader();
     await ndef.write({
       records: [
         { recordType: "mime", mediaType: "text/vcard", data: encoder.encode(vcard) },
       ],
     });
-    setStatus("Gelukt! De tag is geprogrammeerd. Dit hoefde je maar één keer te doen.");
+    setStatus("Done! The tag is programmed. You only had to do this once.");
   } catch (error) {
-    setStatus(`Schrijven mislukt: ${error.message || error}`, true);
+    setStatus(`Writing failed: ${error.message || error}`, true);
   }
 }
 
 function init() {
   if (!("NDEFReader" in window)) {
     setStatus(
-      "Web NFC wordt niet ondersteund in deze browser. Open deze pagina in Chrome op Android om een tag te schrijven.",
+      "Web NFC is not supported in this browser. Open this page in Chrome on Android to write a tag.",
       true,
     );
     btn.disabled = true;
@@ -48,7 +48,7 @@ function init() {
   }
 
   btn.addEventListener("click", () => {
-    setStatus("Schrijven…");
+    setStatus("Writing…");
     writeTag();
   });
 }

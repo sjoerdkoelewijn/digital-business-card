@@ -1,13 +1,13 @@
 import { loadContact, saveContact, isComplete, buildVCard, newFieldId } from "./contact-store.js";
 import { qrIconSvg, trashIconSvg, personIconSvg, arrowUpIconSvg, arrowDownIconSvg } from "./icons.js";
 
-const KIND_LABELS = { text: "Tekst", phone: "Telefoon", email: "E-mail", url: "Link", address: "Adres" };
+const KIND_LABELS = { text: "Text", phone: "Phone", email: "Email", url: "Link", address: "Address" };
 const VALUE_PLACEHOLDERS = {
-  phone: "0031611223344 (landcode + nummer, geen spaties)",
-  email: "naam@voorbeeld.com",
-  url: "voorbeeld.com",
-  text: "Waarde",
-  address: "Straatnaam 12\n1234 AB Plaats",
+  phone: "0031611223344 (country code + number, no spaces)",
+  email: "name@example.com",
+  url: "example.com",
+  text: "Value",
+  address: "Street name 12\n1234 AB City",
 };
 const OUTPUT_PHOTO_SIZE = 640;
 const PRESET_COLORS = [
@@ -149,7 +149,7 @@ function renderFieldValue(container, field) {
 function renderCard(c) {
   applyAccentColor(c.accentColor);
 
-  document.getElementById("card-name").textContent = `${c.firstName} ${c.lastName}`.trim() || "Naam onbekend";
+  document.getElementById("card-name").textContent = `${c.firstName} ${c.lastName}`.trim() || "Name unknown";
 
   const phoneticEl = document.getElementById("card-phonetic");
   if (c.phonetic) {
@@ -341,7 +341,7 @@ function createFieldRow(field) {
   const moveUpBtn = document.createElement("button");
   moveUpBtn.type = "button";
   moveUpBtn.className = "field-move-btn";
-  moveUpBtn.setAttribute("aria-label", "Naar boven verplaatsen");
+  moveUpBtn.setAttribute("aria-label", "Move up");
   moveUpBtn.innerHTML = arrowUpIconSvg;
   moveUpBtn.addEventListener("click", () => {
     const prev = li.previousElementSibling;
@@ -352,7 +352,7 @@ function createFieldRow(field) {
   const moveDownBtn = document.createElement("button");
   moveDownBtn.type = "button";
   moveDownBtn.className = "field-move-btn";
-  moveDownBtn.setAttribute("aria-label", "Naar beneden verplaatsen");
+  moveDownBtn.setAttribute("aria-label", "Move down");
   moveDownBtn.innerHTML = arrowDownIconSvg;
   moveDownBtn.addEventListener("click", () => {
     const next = li.nextElementSibling;
@@ -363,7 +363,7 @@ function createFieldRow(field) {
   const deleteBtn = document.createElement("button");
   deleteBtn.type = "button";
   deleteBtn.className = "field-delete-btn";
-  deleteBtn.setAttribute("aria-label", "Veld verwijderen");
+  deleteBtn.setAttribute("aria-label", "Delete field");
   deleteBtn.innerHTML = trashIconSvg;
   deleteBtn.addEventListener("click", () => {
     li.remove();
@@ -375,7 +375,7 @@ function createFieldRow(field) {
   const labelInput = document.createElement("input");
   labelInput.type = "text";
   labelInput.className = "f-label";
-  labelInput.placeholder = "Label (bv. Profession)";
+  labelInput.placeholder = "Label (e.g. Profession)";
   labelInput.value = field.label || "";
 
   const valueControl = field.kind === "address" ? document.createElement("textarea") : document.createElement("input");
@@ -385,7 +385,7 @@ function createFieldRow(field) {
     valueControl.type = "text";
   }
   valueControl.className = "f-value";
-  valueControl.placeholder = VALUE_PLACEHOLDERS[field.kind] || "Waarde";
+  valueControl.placeholder = VALUE_PLACEHOLDERS[field.kind] || "Value";
   valueControl.value = field.value || "";
 
   select.addEventListener("change", () => {
@@ -394,7 +394,7 @@ function createFieldRow(field) {
     if (newControl.tagName === "TEXTAREA") newControl.rows = 2;
     else newControl.type = "text";
     newControl.className = "f-value";
-    newControl.placeholder = VALUE_PLACEHOLDERS[select.value] || "Waarde";
+    newControl.placeholder = VALUE_PLACEHOLDERS[select.value] || "Value";
     newControl.value = current.value;
     current.replaceWith(newControl);
   });
@@ -406,8 +406,8 @@ function createFieldRow(field) {
 function updateFieldMoveButtons() {
   const rows = document.querySelectorAll("#field-editor-list .field-editor-row");
   rows.forEach((row, index) => {
-    row.querySelector(".field-move-btn[aria-label='Naar boven verplaatsen']").disabled = index === 0;
-    row.querySelector(".field-move-btn[aria-label='Naar beneden verplaatsen']").disabled = index === rows.length - 1;
+    row.querySelector(".field-move-btn[aria-label='Move up']").disabled = index === 0;
+    row.querySelector(".field-move-btn[aria-label='Move down']").disabled = index === rows.length - 1;
   });
 }
 
@@ -546,7 +546,7 @@ function init() {
     try {
       saveContact(next);
     } catch (error) {
-      alert("Opslaan is mislukt: " + (error && error.message ? error.message : error));
+      alert("Saving failed: " + (error && error.message ? error.message : error));
       return;
     }
     contact = next;
@@ -568,7 +568,7 @@ function init() {
     sw.className = "color-swatch";
     sw.dataset.color = color;
     sw.style.background = color;
-    sw.setAttribute("aria-label", `Kleur ${color}`);
+    sw.setAttribute("aria-label", `Color ${color}`);
     sw.setAttribute("aria-pressed", "false");
     sw.addEventListener("click", () => setEditorColor(color));
     swatchList.appendChild(sw);

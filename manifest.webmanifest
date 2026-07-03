@@ -1,6 +1,6 @@
 {
-  "name": "Visitekaartje",
-  "short_name": "Visitekaartje",
+  "name": "Business card",
+  "short_name": "Business card",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
