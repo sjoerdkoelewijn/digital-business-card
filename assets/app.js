@@ -19,7 +19,7 @@ let pendingPhoto = null; // dataURL staged in the editor, applied on save
 
 /* ---------- theming ---------- */
 
-// Accepts "033d74", "#033d74" or "#03D" and returns a clean "#033d74", or
+// Accepts "ed3b3b", "#ed3b3b" or "#e3b" and returns a clean "#ed3b3b", or
 // null while the user is still mid-typing an incomplete value.
 function normalizeHex(value) {
   let v = (value || "").trim();
@@ -58,6 +58,9 @@ function applyAccentColor(color) {
   const root = document.documentElement.style;
   root.setProperty("--accent", color);
   root.setProperty("--page-bg", lighten(color, 0.14));
+  // Match the browser/OS chrome (address bar, status bar) to the card color.
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeMeta) themeMeta.setAttribute("content", color);
 
   const isLight = getBrightness(color) > 150;
   if (isLight) {
@@ -452,7 +455,7 @@ function openEditForm(c) {
   form.lastName.value = c.lastName;
   form.phonetic.value = c.phonetic || "";
   form.hidePhoto.checked = Boolean(c.hidePhoto);
-  setEditorColor(c.accentColor || "#033d74");
+  setEditorColor(c.accentColor || "#ed3b3b");
 
   pendingPhoto = c.photo || null;
   const preview = document.getElementById("photo-preview");
@@ -480,7 +483,7 @@ function readForm() {
     firstName: form.firstName.value.trim(),
     lastName: form.lastName.value.trim(),
     phonetic: form.phonetic.value.trim(),
-    accentColor: normalizeHex(form.accentColorHex.value) || "#033d74",
+    accentColor: normalizeHex(form.accentColorHex.value) || "#ed3b3b",
     fields: readFieldsFromEditor(),
   };
 }

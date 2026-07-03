@@ -9,7 +9,7 @@ export const contact = {
   firstName: "",
   lastName: "",
   phonetic: "", // optionele uitspraak, bv. "[ Chourde Kou-lee-weïne ]"
-  accentColor: "#033D74",
+  accentColor: "#ed3b3b",
   fields: [
     { id: "profession", kind: "text", label: "Profession", value: "" },
     { id: "email", kind: "email", label: "Email", value: "" },
