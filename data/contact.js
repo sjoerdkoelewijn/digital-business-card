@@ -5,6 +5,7 @@
 
 export const contact = {
   photo: null, // vierkante foto als data-URL, ingesteld via de editor
+  hidePhoto: false, // verbergt de foto + golf en start de kaart bij de naam
   firstName: "",
   lastName: "",
   phonetic: "", // optionele uitspraak, bv. "[ Chourde Kou-lee-weïne ]"

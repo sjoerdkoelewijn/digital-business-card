@@ -11,9 +11,8 @@ const VALUE_PLACEHOLDERS = {
 };
 const OUTPUT_PHOTO_SIZE = 640;
 const PRESET_COLORS = [
-  "#033d74", "#0f172a", "#1e3a2b", "#0e4f4f",
-  "#3b1f6e", "#7a2048", "#8a2b0e", "#5c4b1a",
-  "#b91c1c", "#0369a1", "#047857", "#c2410c",
+  "#022240", "#250b60", "#0e8ab7", "#d72593",
+  "#0da157", "#db6b08", "#ed3b3b",
 ];
 
 let pendingPhoto = null; // dataURL staged in the editor, applied on save
@@ -155,6 +154,20 @@ function renderCard(c) {
     phoneticEl.hidden = false;
   } else {
     phoneticEl.hidden = true;
+  }
+
+  // Photo hidden: drop the whole photo+wave header and move the QR tile
+  // into the content so the card starts at the name but sharing still works.
+  const card = document.querySelector(".card");
+  const qrBtn = document.getElementById("btn-open-qr");
+  if (c.hidePhoto) {
+    card.classList.add("card--no-photo");
+    const content = document.querySelector(".content");
+    if (qrBtn.parentElement !== content) content.prepend(qrBtn);
+  } else {
+    card.classList.remove("card--no-photo");
+    const photo = document.querySelector(".photo");
+    if (qrBtn.parentElement !== photo) photo.appendChild(qrBtn);
   }
 
   const photoImg = document.getElementById("card-photo");
@@ -438,6 +451,7 @@ function openEditForm(c) {
   form.firstName.value = c.firstName;
   form.lastName.value = c.lastName;
   form.phonetic.value = c.phonetic || "";
+  form.hidePhoto.checked = Boolean(c.hidePhoto);
   setEditorColor(c.accentColor || "#033d74");
 
   pendingPhoto = c.photo || null;
@@ -462,6 +476,7 @@ function readForm() {
   const form = document.getElementById("edit-form");
   return {
     photo: pendingPhoto,
+    hidePhoto: form.hidePhoto.checked,
     firstName: form.firstName.value.trim(),
     lastName: form.lastName.value.trim(),
     phonetic: form.phonetic.value.trim(),

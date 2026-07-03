@@ -147,6 +147,21 @@
   }
   .icon-tile-btn svg { width: 100%; height: 100%; display: block; }
 
+  /* ---- no-photo mode ---- */
+
+  .card--no-photo .photo { display: none; }
+
+  /* extra breathing room above the name when there's no photo header */
+  .card--no-photo .content { padding-top: 2.75rem; }
+
+  /* QR tile moves into the content, right-aligned above the name */
+  .card--no-photo .icon-tile-btn {
+    position: static;
+    width: 4rem;
+    display: block;
+    margin: 0 0 1.25rem auto;
+  }
+
   /* ---- content ---- */
 
   .content {
@@ -439,6 +454,21 @@
     gap: 0.75rem;
   }
   .row .btn { flex: 1; }
+
+  .edit-form .checkbox-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 0.95rem;
+  }
+  .checkbox-row input[type="checkbox"] {
+    width: 1.15rem;
+    height: 1.15rem;
+    flex: none;
+    accent-color: var(--accent);
+  }
 
   .photo-preview-wrap {
     display: flex;
