@@ -11,15 +11,15 @@ const VALUE_PLACEHOLDERS = {
 };
 const OUTPUT_PHOTO_SIZE = 640;
 const PRESET_COLORS = [
-  "#022240", "#250b60", "#0e8ab7", "#d72593",
-  "#0da157", "#db6b08", "#ed3b3b",
+  "#022240", "#250b60", "#1165ae", "#441bc9", "#0f8759",
+  "#2d2d2d", "#ba1d1d", "#1d8488", "#6c2d83", "#c14a18",
 ];
 
 let pendingPhoto = null; // dataURL staged in the editor, applied on save
 
 /* ---------- theming ---------- */
 
-// Accepts "ed3b3b", "#ed3b3b" or "#e3b" and returns a clean "#ed3b3b", or
+// Accepts "250b60", "#250b60" or "#25b" and returns a clean "#250b60", or
 // null while the user is still mid-typing an incomplete value.
 function normalizeHex(value) {
   let v = (value || "").trim();
@@ -455,7 +455,7 @@ function openEditForm(c) {
   form.lastName.value = c.lastName;
   form.phonetic.value = c.phonetic || "";
   form.hidePhoto.checked = Boolean(c.hidePhoto);
-  setEditorColor(c.accentColor || "#ed3b3b");
+  setEditorColor(c.accentColor || "#250b60");
 
   pendingPhoto = c.photo || null;
   const preview = document.getElementById("photo-preview");
@@ -483,7 +483,7 @@ function readForm() {
     firstName: form.firstName.value.trim(),
     lastName: form.lastName.value.trim(),
     phonetic: form.phonetic.value.trim(),
-    accentColor: normalizeHex(form.accentColorHex.value) || "#ed3b3b",
+    accentColor: normalizeHex(form.accentColorHex.value) || "#250b60",
     fields: readFieldsFromEditor(),
   };
 }
