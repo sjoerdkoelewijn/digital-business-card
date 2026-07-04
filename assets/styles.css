@@ -151,31 +151,15 @@
 
   .card--no-photo .photo { display: none; }
 
-  /* extra breathing room above the name when there's no photo header */
-  .card--no-photo .content { padding-top: 2.75rem; }
+  /* extra breathing room at the top when there's no photo header */
+  .card--no-photo .content { padding-top: 4rem; }
 
-  /* On wider screens the card is a centered window, so keep the QR tile in
-     flow, right-aligned above the name. */
+  /* QR tile sits in flow at the top, left-aligned above the name */
   .card--no-photo .icon-tile-btn {
     position: static;
     width: 4rem;
     display: block;
-    margin: 0 0 1.25rem auto;
-  }
-
-  /* On narrow screens (edge-to-edge card that scrolls) pin the QR tile to
-     the bottom-right of the viewport so it's always reachable while
-     scrolling. The extra bottom padding keeps the edit/install buttons from
-     ever resting underneath it. */
-  @media (max-width: 519px) {
-    .card--no-photo .icon-tile-btn {
-      position: fixed;
-      right: 1.25rem;
-      bottom: 1.25rem;
-      margin: 0;
-      z-index: 20;
-    }
-    .card--no-photo .content { padding-bottom: 7rem; }
+    margin: 0 0 1.75rem 0;
   }
 
   /* ---- content ---- */
