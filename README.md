@@ -32,10 +32,6 @@ Wil je in plaats daarvan vaste standaardwaarden in de code zetten? Pas
 dan `data/contact.js` aan; dat dient als fallback zolang er nog niets
 lokaal is opgeslagen.
 
-Onderaan het bewerkscherm staat ook een link naar **"NFC-tag
-programmeren"** — dat is een eenmalige setup-actie, dus die staat expres
-niet op de kaart zelf.
-
 ## Lokaal bekijken
 
 ```
@@ -61,10 +57,6 @@ npx serve .
   foto) — dat opent direct de "voeg contact toe"-prompt in hun
   camera-app. Dit is de enige manier die ook echt werkt voor iemand die
   jouw gegevens nog niet heeft.
-- **NFC** (eenmalige setup, via "Gegevens bewerken" → "NFC-tag
-  programmeren"): schrijf je gegevens op een fysieke NFC-sticker
-  (alleen werkend vanaf Chrome op Android). Wie daarna met een telefoon
-  tegen de tag tikt, krijgt direct de contact-prompt — geen app nodig.
 
 ## Belangrijk: geen sync tussen toestellen
 

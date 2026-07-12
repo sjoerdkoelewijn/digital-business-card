@@ -292,14 +292,6 @@
   }
   .icon-btn svg { width: 1.1rem; height: 1.1rem; }
 
-  .nfc-link {
-    display: block;
-    text-align: center;
-    font-size: 0.9rem;
-    color: var(--accent-on-surface);
-    text-decoration: underline;
-  }
-
   /* ---- dialogs ---- */
 
   .dialog {

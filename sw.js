@@ -1,17 +1,16 @@
-const CACHE_NAME = "visitekaartje-v25";
+const CACHE_NAME = "visitekaartje-v26";
 
 const ASSETS = [
   "./",
   "./index.html",
-  "./nfc.html",
   "./manifest.webmanifest",
   "./assets/styles.css",
   "./assets/app.js",
-  "./assets/nfc.js",
   "./assets/contact-store.js",
   "./assets/icons.js",
   "./assets/qrcode.min.js",
   "./data/contact.js",
+  "./assets/icons/icon.svg",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
   "./assets/icons/icon-maskable-512.png",
