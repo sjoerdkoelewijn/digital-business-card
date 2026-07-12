@@ -579,8 +579,12 @@ function init() {
   });
 
   document.getElementById("btn-add-field").addEventListener("click", () => {
-    document.getElementById("field-editor-list").appendChild(createFieldRow({ id: newFieldId(), kind: "text", label: "", value: "" }));
+    // Add new fields at the top, right below the button, so they're
+    // immediately visible instead of appearing off-screen at the bottom.
+    const row = createFieldRow({ id: newFieldId(), kind: "text", label: "", value: "" });
+    document.getElementById("field-editor-list").prepend(row);
     updateFieldMoveButtons();
+    row.querySelector(".f-label").focus();
   });
 
   document.getElementById("btn-open-qr").addEventListener("click", () => {
